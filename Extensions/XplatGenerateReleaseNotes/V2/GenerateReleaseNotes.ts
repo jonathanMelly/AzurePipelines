@@ -235,49 +235,12 @@ async function run(): Promise<number>  {
 
                 // Look for WI/CS based on releases
                 if (tl.getBoolInput("alsoGatherDataFromReleaseApi")) {
-                    agentApi.logInfo(`Looking for WI/CS between release ${releaseId} and ${mostRecentSuccessfulDeploymentRelease.id}`);
 
-                    commitCount = 0;
-                    workItemCount = 0;
+                    agentApi.logInfo(`Looking for WI/CS between release ${mostRecentSuccessfulDeploymentRelease.id} and ${releaseId}`);
 
-                    try {
-                        workitems = await releaseApi.getReleaseWorkItemsRefs(teamProject, releaseId, mostRecentSuccessfulDeploymentRelease.id);
-                        if (workitems) {
-                            workItemCount = workitems.length;
-                            globalWorkItems = globalWorkItems.concat(workitems);
-                        }
-                    }
-                    catch (error) {
-                        agentApi.logError("Cannot retrieve WI from release api : ${error}");
-                    }
-
-                    try {
-                        let rCommits = await releaseApi.getReleaseChanges(teamProject, releaseId, mostRecentSuccessfulDeploymentRelease.id);
-                        if (rCommits) {
-                            commitCount = rCommits.length;
-
-                            // Change type from ReleaseApi is not exactly the same as Change type from BuildApi
-                            commits = rCommits.map(rcs => ({
-                                id: rcs.id,
-                                type: rcs.changeType,
-                                timestamp : rcs.timestamp,
-                                pusher : rcs.pusher,
-                                messageTruncated : false,
-                                message : rcs.message,
-                                location : rcs.location,
-                                displayUri : rcs.displayUri,
-                                author : rcs.author
-                            } as Change));
-
-                            globalCommits = globalCommits.concat(commits);
-
-                        }
-                    }
-                    catch (error) {
-                        agentApi.logError("Cannot retrieve WS from release api : ${error}");
-                    }
-
-                    agentApi.logInfo(`Detected ${commitCount} commits/changesets and ${workItemCount} workitems between the releases.`);
+                    let result = await util.AddDataFromRelease(releaseId, mostRecentSuccessfulDeploymentRelease, releaseApi, teamProject);
+                    globalWorkItems.push(...result.workitems);
+                    globalCommits.push(...result.commits);
 
                 }
 

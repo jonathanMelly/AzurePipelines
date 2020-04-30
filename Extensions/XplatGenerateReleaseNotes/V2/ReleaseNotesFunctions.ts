@@ -657,3 +657,48 @@ export function fixline (line: string ): string {
         return "\"" + line.trim() + "\"";
     }
 }
+
+export async function AddDataFromRelease(releaseId: number,
+                                         mostRecentSuccessfulDeploymentRelease: Release,
+                                         releaseApi: IReleaseApi,
+                                         teamProject: string): Promise<UnifiedArtifactDetails> {
+
+    let workItems: ResourceRef[] = [];
+    let commits: Change[] = [];
+
+    try {
+        let wiResult = await releaseApi.getReleaseWorkItemsRefs(teamProject, releaseId, mostRecentSuccessfulDeploymentRelease.id);
+        if (wiResult) {
+            workItems = wiResult;
+        }
+
+    } catch (error) {
+        agentApi.logError(`Cannot retrieve WI from release api : ${error}`);
+    }
+
+    try {
+        let csResult = await releaseApi.getReleaseChanges(teamProject, releaseId, mostRecentSuccessfulDeploymentRelease.id);
+        if (csResult) {
+
+            // Change type from ReleaseApi is not exactly the same as Change type from BuildApi
+            commits = csResult.map(rcs => ({
+                id: rcs.id,
+                type: rcs.changeType,
+                timestamp: rcs.timestamp,
+                pusher: rcs.pusher,
+                messageTruncated: false,
+                message: rcs.message,
+                location: rcs.location,
+                displayUri: rcs.displayUri,
+                author: rcs.author
+            } as Change));
+
+        }
+    } catch (error) {
+        agentApi.logError(`Cannot retrieve WS from release api : ${error}`);
+    }
+
+    agentApi.logInfo(`Detected ${commits.length} commits/changesets and ${workItems.length} workitems between the releases ${mostRecentSuccessfulDeploymentRelease.id} and ${releaseId}.`);
+
+    return Promise.resolve({commits: commits, workitems: workItems} as UnifiedArtifactDetails);
+}
