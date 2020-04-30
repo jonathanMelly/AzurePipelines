@@ -170,6 +170,15 @@
       "groupName":"advanced"
      },
      {
+       "name": "alsoGatherDataFromReleaseApi",
+       "type": "boolean",
+       "label": "Gather data from ReleaseApi",
+       "defaultValue": "False",
+       "required": false,
+       "helpMarkDown": "If true will also retrieve WI/CS from release api which is very useful if your code is hosted on github and WI/CS references are not automatically added to a build but correctly detected by the release api",
+       "groupName":"advanced"
+     },
+     {
       "name": "customHandlebarsExtensionCode",
       "type": "multiLine",
       "label": "Custom Handlebars Extension",
