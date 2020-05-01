@@ -28,7 +28,7 @@ export class UnifiedArtifactDetails {
 
 import * as restm from "typed-rest-client/RestClient";
 import tl = require("vsts-task-lib/task");
-import { ReleaseEnvironment, Artifact, Deployment, DeploymentStatus, Release } from "vso-node-api/interfaces/ReleaseInterfaces";
+import { ReleaseEnvironment, Artifact, Deployment, DeploymentStatus, Release, Change as ReleaseChange } from "vso-node-api/interfaces/ReleaseInterfaces";
 import { IAgentSpecificApi, AgentSpecificApi } from "./agentSpecific";
 import { IReleaseApi } from "vso-node-api/ReleaseApi";
 import { IRequestHandler } from "vso-node-api/interfaces/common/VsoBaseInterfaces";
@@ -679,20 +679,8 @@ export async function AddDataFromRelease(releaseId: number,
     try {
         let csResult = await releaseApi.getReleaseChanges(teamProject, releaseId, mostRecentSuccessfulDeploymentRelease.id);
         if (csResult) {
-
             // Change type from ReleaseApi is not exactly the same as Change type from BuildApi
-            commits = csResult.map(rcs => ({
-                id: rcs.id,
-                type: rcs.changeType,
-                timestamp: rcs.timestamp,
-                pusher: rcs.pusher,
-                messageTruncated: false,
-                message: rcs.message,
-                location: rcs.location,
-                displayUri: rcs.displayUri,
-                author: rcs.author
-            } as Change));
-
+            commits = csResult.map(rcs => (Convert(rcs)));
         }
     } catch (error) {
         agentApi.logError(`Cannot retrieve WS from release api : ${error}`);
@@ -701,4 +689,18 @@ export async function AddDataFromRelease(releaseId: number,
     agentApi.logInfo(`Detected ${commits.length} commits/changesets and ${workItems.length} workitems between the releases ${mostRecentSuccessfulDeploymentRelease.id} and ${releaseId}.`);
 
     return Promise.resolve({commits: commits, workitems: workItems} as UnifiedArtifactDetails);
+}
+
+export function Convert(rChange: ReleaseChange): Change {
+    return {
+        type: rChange.changeType,
+        author: rChange.author,
+        displayUri: rChange.displayUri,
+        location: rChange.location,
+        message: rChange.message,
+        pusher: rChange.pusher,
+        timestamp: rChange.timestamp,
+        messageTruncated: false,
+        id: rChange.id
+    };
 }
