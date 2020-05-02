@@ -1,7 +1,7 @@
-import {IdentityRef} from "vso-node-api/interfaces/common/VSSInterfaces";
+import {IdentityRef} from "azure-devops-node-api/interfaces/common/VSSInterfaces";
 import {AddDataFromRelease, Convert} from "../ReleaseNotesFunctions";
-import {Change as ChangeRelease, Release, ReleaseWorkItemRef} from "vso-node-api/interfaces/ReleaseInterfaces";
-import {IReleaseApi} from "vso-node-api/ReleaseApi";
+import {Change as ChangeRelease, Release, ReleaseWorkItemRef} from "azure-devops-node-api/interfaces/ReleaseInterfaces";
+import {IReleaseApi} from "azure-devops-node-api/ReleaseApi";
 import {instance, mock, when} from "ts-mockito";
 
 const expect = require("chai").expect;
