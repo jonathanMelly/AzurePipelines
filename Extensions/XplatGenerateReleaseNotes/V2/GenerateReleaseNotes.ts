@@ -4,7 +4,7 @@ import { IReleaseApi } from "azure-devops-node-api/ReleaseApi";
 import * as vstsInterfaces from "azure-devops-node-api/interfaces/common/VsoBaseInterfaces";
 
 import { AgentSpecificApi } from "./agentSpecific";
-import { Release, Change as ReleaseChange } from "azure-devops-node-api/interfaces/ReleaseInterfaces";
+import { Release } from "azure-devops-node-api/interfaces/ReleaseInterfaces";
 import * as util from "./ReleaseNotesFunctions";
 import { IBuildApi } from "azure-devops-node-api/BuildApi";
 import { IGitApi } from "azure-devops-node-api/GitApi";
