@@ -262,6 +262,15 @@ The task takes the following parameters
 * (Advanced V2 only) Primary Only. If this is set only WI and CS associated with primary artifact are listed, default is false so all artifacts scanned.
 * (Advanced V2 only) Cross Project For PRs. If true will try to match commits to Azure DevOps PR cross project within the organisation, if false only searches the Team Project.
 * (Advanced V2 only) GitHub PAT. (Optional) This [GitHub PAT](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line) is only required to expand commit messages stored in a private GitHub repos. This PAT is not required for commit in Azure DevOps public or private repos or public GitHub repos
+* (Advanced V2 only) Use Release API. If true, the wi/cs will additionally be gathered from the comparison between the last successful release and the new one. WARNING: to allow the build service to access github endpoint, you need to:
+  1. Navigate to [endpoint configuration panel](https://dev.azure.com/{your_organization}/{your_project}/_settings/adminservices) (filling the placeholders with your context).
+  2. Identify the github endpoint used during your build by clicking on all github endpoints until you find build related information under it's 'usage history' tab &ast;&ast;
+  3. Click again on the identified github endpoint
+  4. Click on the kebab menu (3-dots) and choose 'security'
+  5. Add 'User' role for user "${your_project} build service" (**User**, not Reader )
+  
+  **&ast;&ast;** If usage history is empty or not relevant (or it is not working with that github endpoint), you'll have to test each github endpoint to find which is really used during the build...
+  
 * (Handlebars V2 only) customHandlebars ExtensionCode. A custom Handlebars extension written as a JavaScript module e.g. module.exports = {foo: function () {return 'Returns foo';}};
 * (Outputs) Optional: Name of the variable that release notes contents will be copied into for use in other tasks. As an output variable equates to an environment variable, so there is a limit on the maximum size. For larger release notes it is best to save the file locally as opposed to using an output variable.
 

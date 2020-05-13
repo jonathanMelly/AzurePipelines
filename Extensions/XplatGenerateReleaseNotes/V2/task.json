@@ -185,7 +185,7 @@
        "label": "Gather data from ReleaseApi",
        "defaultValue": "False",
        "required": false,
-       "helpMarkDown": "If true will also retrieve WI/CS from release api which is very useful if your code is hosted on github and WI/CS references are not automatically added to a build but correctly detected by the release api",
+       "helpMarkDown": "If true will also retrieve WI/CS from release api which is very useful if your code is hosted on github and WI/CS references are not automatically added to a build but correctly detected by the release api. WARNING: you have to allow your build service to use Github endpoint service (see Readme.md for more information)",
        "groupName":"advanced"
      },
      {

@@ -239,7 +239,7 @@ async function run(): Promise<number>  {
 
                     agentApi.logInfo(`Looking for WI/CS between release ${mostRecentSuccessfulDeploymentRelease.id} and ${releaseId}`);
 
-                    let result = await util.AddDataFromRelease(releaseId, mostRecentSuccessfulDeploymentRelease, releaseApi, teamProject);
+                    let result = await util.AddDataFromRelease(releaseId, isInitialRelease ? undefined : mostRecentSuccessfulDeploymentRelease.id , releaseApi, teamProject);
                     globalWorkItems.push(...result.workitems);
                     globalCommits.push(...result.commits);
 

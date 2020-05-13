@@ -45,7 +45,7 @@ describe("GatherDataFromRelease", function () {
         const releaseApi = instance(mockedReleaseApi);
 
         // Act
-        const result = await AddDataFromRelease(releaseId, lastSuccessfullRelease, releaseApi, teamProject);
+        const result = await AddDataFromRelease(releaseId, lastSuccessfullRelease.id, releaseApi, teamProject);
         const buildChange = Convert(releaseChange);
 
         // Assert
@@ -67,7 +67,7 @@ describe("GatherDataFromRelease", function () {
         const releaseApi = instance(mockedReleaseApi);
 
         // Act
-        const result = await AddDataFromRelease(releaseId, lastSuccessfullRelease, releaseApi, teamProject);
+        const result = await AddDataFromRelease(releaseId, lastSuccessfullRelease.id, releaseApi, teamProject);
 
         // Assert
         expect(result.workitems).to.be.an("array").and.have.lengthOf(0);
@@ -88,13 +88,14 @@ describe("GatherDataFromRelease", function () {
         const releaseApi = instance(mockedReleaseApi);
 
         // Act
-        const result = await AddDataFromRelease(releaseId, lastSuccessfullRelease, releaseApi, teamProject);
+        const result = await AddDataFromRelease(releaseId, lastSuccessfullRelease.id, releaseApi, teamProject);
 
         // Assert
         expect(result.workitems).to.be.an("array").and.have.lengthOf(0);
         expect(result.commits).to.be.an("array").and.have.lengthOf(0);
 
     });
+
 });
 
 function CreateWorkItem() {

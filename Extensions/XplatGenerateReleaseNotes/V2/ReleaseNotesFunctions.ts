@@ -677,7 +677,7 @@ export function fixline (line: string ): string {
 }
 
 export async function AddDataFromRelease(releaseId: number,
-                                         mostRecentSuccessfulDeploymentRelease: Release,
+                                         baseId: number,
                                          releaseApi: IReleaseApi,
                                          teamProject: string): Promise<UnifiedArtifactDetails> {
 
@@ -685,26 +685,26 @@ export async function AddDataFromRelease(releaseId: number,
     let commits: Change[] = [];
 
     try {
-        let wiResult = await releaseApi.getReleaseWorkItemsRefs(teamProject, releaseId, mostRecentSuccessfulDeploymentRelease.id);
+        let wiResult = await releaseApi.getReleaseWorkItemsRefs(teamProject, releaseId, baseId);
         if (wiResult) {
             workItems = wiResult;
         }
 
     } catch (error) {
-        agentApi.logError(`Cannot retrieve WI from release api : ${error}`);
+        agentApi.logError(`Cannot retrieve WI from release api (see Readme.md for more information about endpoint security configuration) : ${error}`);
     }
 
     try {
-        let csResult = await releaseApi.getReleaseChanges(teamProject, releaseId, mostRecentSuccessfulDeploymentRelease.id);
+        let csResult = await releaseApi.getReleaseChanges(teamProject, releaseId, baseId);
         if (csResult) {
             // Change type from ReleaseApi is not exactly the same as Change type from BuildApi
             commits = csResult.map(rcs => (Convert(rcs)));
         }
     } catch (error) {
-        agentApi.logError(`Cannot retrieve WS from release api : ${error}`);
+        agentApi.logError(`Cannot retrieve WS from release api (see Readme.md for more information about endpoint security configuration) : ${error}`);
     }
 
-    agentApi.logInfo(`Detected ${commits.length} commits/changesets and ${workItems.length} workitems between the releases ${mostRecentSuccessfulDeploymentRelease.id} and ${releaseId}.`);
+    agentApi.logInfo(`Detected ${commits.length} commits/changesets and ${workItems.length} workitems between the releases ${baseId} and ${releaseId}.`);
 
     return Promise.resolve({commits: commits, workitems: workItems} as UnifiedArtifactDetails);
 }
