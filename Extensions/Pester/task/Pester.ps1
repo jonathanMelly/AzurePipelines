@@ -41,6 +41,7 @@ param
     [string]$ScriptBlock
 )
 
+Write-Host "##vso[task.logissue type=warning]This version of the Pester task runner is now deprecated. Please install the latest version from the Pester publisher for newer features and future support. https://marketplace.visualstudio.com/items?itemName=Pester.PesterRunner"
 Import-Module -Name "$PSScriptRoot\HelperModule.psm1" -Force
 
 if ($run32Bit -eq $true -and $env:Processor_Architecture -ne "x86") {
@@ -61,6 +62,8 @@ if ($run32Bit -eq $true -and $env:Processor_Architecture -ne "x86") {
     &"$env:windir\syswow64\windowspowershell\v1.0\powershell.exe" -noprofile -executionpolicy bypass -file $myinvocation.Mycommand.path $args
     exit
 }
+Write-Host "This task has been deprecated, please consider swapping to its cross-platform replacement published by the Pester Project https://marketplace.visualstudio.com/items?itemName=Pester.PesterRunner"
+
 Write-Host "Running in $($env:Processor_Architecture) PowerShell"
 
 if ($PSBoundParameters.ContainsKey('additionalModulePath')) {
